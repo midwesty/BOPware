@@ -1,0 +1,12 @@
+[
+  {"id":"folk","name":"Folk","description":"Porch lament and warm rot."},
+  {"id":"punk","name":"Punk","description":"Fast, loud, suspiciously sticky."},
+  {"id":"metal","name":"Metal","description":"Forge hymns and neck injuries."},
+  {"id":"pop","name":"Pop","description":"Hooks, gloss, and spiritual emptiness."},
+  {"id":"jazz","name":"Jazz","description":"Forbidden chord soup."},
+  {"id":"country","name":"Country","description":"Truck stop prophecy."},
+  {"id":"classical","name":"Classical","description":"Royal bone etiquette."},
+  {"id":"mutant_metal","name":"Mutant Metal","description":"Angry and mutated."},
+  {"id":"dance","name":"Dance","description":"Literally cannot stop."},
+  {"id":"electronic","name":"Electronic","description":"Battery dream rot."}
+]

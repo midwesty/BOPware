@@ -2,102 +2,106 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spaced</title>
-  <style>
-    body {
-      margin: 0; padding: 0;
-      background: #0a1628;
-      color: #39ff14;
-      font-family: 'Share Tech Mono', 'Courier New', monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
-    }
-    .placeholder-title {
-      font-size: 32px;
-      letter-spacing: 0.3em;
-      margin-bottom: 12px;
-      text-shadow: 0 0 20px rgba(57,255,20,0.6);
-      animation: pulse 2s ease-in-out infinite;
-    }
-    .placeholder-sub {
-      font-size: 12px;
-      letter-spacing: 0.2em;
-      opacity: 0.5;
-      margin-bottom: 40px;
-    }
-    .placeholder-note {
-      font-size: 10px;
-      opacity: 0.3;
-      letter-spacing: 0.15em;
-      border: 1px solid rgba(57,255,20,0.2);
-      padding: 12px 20px;
-      text-align: center;
-      line-height: 1.8;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-    .stars {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-    }
-    .star {
-      position: absolute;
-      background: #fff;
-      border-radius: 50%;
-      animation: twinkle var(--dur) ease-in-out infinite;
-    }
-    @keyframes twinkle {
-      0%, 100% { opacity: var(--op); }
-      50% { opacity: 0.1; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mutant Musician Lab</title>
+  <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
-  <div class="stars" id="stars"></div>
-  <div class="placeholder-title">SPACED</div>
-  <div class="placeholder-sub">DEEP SPACE SURVIVAL ARCADE</div>
-  <div class="placeholder-note">
-    DROP YOUR GAME FILES INTO<br>
-    /apps/spaced/<br>
-    AND REPLACE THIS FILE WITH YOUR index.html
+  <div id="app" class="app-shell">
+    <header class="topbar panel">
+      <div>
+        <div class="logo-title">Mutant Musician Lab</div>
+        <div class="logo-subtitle">Raise, mutate, gig, freeze, revive, and rebreed tiny disasters.</div>
+      </div>
+      <div class="topbar-right">
+        <div class="stat-chip">Cash <span id="cashValue">$0</span></div>
+        <div class="stat-chip">Clock <span id="clockValue">--:--</span></div>
+        <div class="stat-chip">Alerts <span id="alertCount">0</span></div>
+        <div class="stat-chip">Save Slot <span id="saveSlotLabel">1</span></div>
+      </div>
+    </header>
+
+    <main class="main-screen panel">
+      <section class="screen-frame">
+        <div class="screen-head">
+          <div>
+            <div id="selectedName" class="selected-name">No Active Musician</div>
+            <div id="selectedMeta" class="selected-meta">Open the lab to create one.</div>
+          </div>
+          <div class="screen-head-actions">
+            <button data-action="openRoster" class="tiny-btn">Roster</button>
+            <button data-action="openLab" class="tiny-btn">Lab</button>
+            <button data-action="openBands" class="tiny-btn">Bands</button>
+            <button data-action="openStudio" class="tiny-btn">Studio</button>
+            <button data-action="openSettings" class="tiny-btn">Settings</button>
+          </div>
+        </div>
+
+        <div id="musicianScene" class="musician-scene stage-embryo room-shared idle-anim">
+          <div class="scene-background"></div>
+          <div class="screen-static"></div>
+          <div id="statusOverlay" class="status-overlay hidden"></div>
+          <div id="musicianSprite" class="musician-sprite">
+            <div class="sprite-body"></div>
+            <div class="sprite-eyes"></div>
+            <div class="sprite-mouth"></div>
+            <div class="sprite-hair"></div>
+            <div class="sprite-extra"></div>
+            <div class="sprite-instrument"></div>
+          </div>
+          <div id="eventTicker" class="event-ticker">No incidents yet.</div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div id="needMeters" class="need-meters"></div>
+          <div id="statusCards" class="status-cards"></div>
+        </div>
+
+        <div class="action-pad">
+          <button class="action-btn" data-action="feed">Feed</button>
+          <button class="action-btn" data-action="water">Water</button>
+          <button class="action-btn" data-action="rest">Rest</button>
+          <button class="action-btn" data-action="clean">Clean</button>
+          <button class="action-btn" data-action="vice">Vice</button>
+          <button class="action-btn" data-action="practiceAction">Practice</button>
+          <button class="action-btn" data-action="inventory">Items</button>
+          <button class="action-btn" data-action="openInfo">Info</button>
+        </div>
+      </section>
+
+      <aside class="sidebar-tools panel">
+        <button class="tool-btn" data-action="openGigs">Gigs</button>
+        <button class="tool-btn" data-action="openBattle">Battle / Practice</button>
+        <button class="tool-btn" data-action="openDNA">DNA Archive</button>
+        <button class="tool-btn" data-action="freezeToggle">Freeze / Thaw</button>
+        <button class="tool-btn" data-action="cloneSelected">Rebirth Clone</button>
+        <button class="tool-btn" data-action="openShop">Shop</button>
+        <button class="tool-btn" data-action="openCheats">Cheats</button>
+        <button class="tool-btn" data-action="openBands">Bands</button>
+      </aside>
+    </main>
+
+    <footer class="footer-hint panel">
+      Real-time decay continues while the browser is closed. Shared-room studio upgrades affect all active musicians. Use the cheat terminal for testing, stage skips, and time acceleration.
+    </footer>
   </div>
 
-  <script>
-    // Generate stars
-    const container = document.getElementById('stars');
-    for (let i = 0; i < 80; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      const size = Math.random() * 2 + 1;
-      star.style.cssText = `
-        left:${Math.random()*100}%;top:${Math.random()*100}%;
-        width:${size}px;height:${size}px;
-        --dur:${2+Math.random()*3}s;
-        --op:${0.3+Math.random()*0.7};
-      `;
-      container.appendChild(star);
-    }
+  <div id="modalRoot" class="modal-root"></div>
+  <div id="toastRoot" class="toast-root"></div>
 
-    // Communicate with parent deck if needed
-    window.addEventListener('message', e => {
-      if (e.data?.type === 'LOAD') {
-        // Load save data here
-        console.log('Game received save data:', e.data.payload);
-      }
-    });
+  <template id="modalTemplate">
+    <div class="modal-backdrop">
+      <div class="modal-window panel">
+        <div class="modal-header">
+          <h2 class="modal-title">Modal</h2>
+          <button class="icon-close" data-close-modal>&times;</button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer"></div>
+      </div>
+    </div>
+  </template>
 
-    // Example: send save data to deck
-    function saveGame(data) {
-      window.parent.postMessage({ type: 'SAVE', appId: 'spaced', payload: data }, '*');
-    }
-  </script>
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>

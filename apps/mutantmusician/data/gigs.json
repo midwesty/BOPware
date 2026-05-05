@@ -1,0 +1,15 @@
+[
+  {"id":"open_mic","name":"Open Mic","requiredType":"solo","durationMinutes":45,"payout":28,"fameGain":4,"stressGain":4,"genreBias":"folk","roleBias":"vocalist","postedHours":10,"recurring":true},
+  {"id":"dive_bar","name":"Dive Bar Set","requiredType":"solo","durationMinutes":70,"payout":46,"fameGain":5,"stressGain":8,"genreBias":"punk","roleBias":"guitarist","postedHours":12,"recurring":true},
+  {"id":"wedding","name":"Wedding Disaster","requiredType":"band","durationMinutes":90,"payout":120,"fameGain":7,"stressGain":12,"genreBias":"pop","roleBias":"vocalist","postedHours":16,"recurring":true},
+  {"id":"basement_show","name":"Basement Show","requiredType":"band","durationMinutes":60,"payout":88,"fameGain":10,"stressGain":10,"genreBias":"metal","roleBias":"drummer","postedHours":12,"recurring":true},
+  {"id":"busking","name":"Busking","requiredType":"solo","durationMinutes":55,"payout":34,"fameGain":3,"stressGain":3,"genreBias":"country","roleBias":"strings","postedHours":10,"recurring":true},
+  {"id":"studio_session","name":"Studio Session","requiredType":"solo","durationMinutes":85,"payout":74,"fameGain":5,"stressGain":6,"genreBias":"electronic","roleBias":"producer","postedHours":14,"recurring":true},
+  {"id":"church_gig","name":"Church Gig","requiredType":"band","durationMinutes":75,"payout":95,"fameGain":6,"stressGain":5,"genreBias":"folk","roleBias":"keys","postedHours":18,"recurring":true},
+  {"id":"metal_festival","name":"Metal Festival","requiredType":"band","durationMinutes":60,"payout":100,"fameGain":8,"stressGain":6,"genreBias":"metal","roleBias":"keys","postedHours":18,"recurring":true},
+  {"id":"coffee_shop","name":"Coffee Shop","requiredType":"solo","durationMinutes":80,"payout":80,"fameGain":2,"stressGain":3,"genreBias":"folk","roleBias":"vocalist","postedHours":15,"recurring":true},
+  {"id":"charity_event","name":"Charity Event","requiredType":"band","durationMinutes":120,"payout":50,"fameGain":5,"stressGain":2,"genreBias":"pop","roleBias":"dance","postedHours":18,"recurring":true},
+  {"id":"radio_show","name":"Radio Show","requiredType":"solo","durationMinutes":45,"payout":40,"fameGain":5,"stressGain":3,"genreBias":"country","roleBias":"strings","postedHours":12,"recurring":true},
+  {"id":"questionable_internet_thing","name":"Questionable Internet Thing","requiredType":"solo","durationMinutes":45,"payout":30,"fameGain":1,"stressGain":2,"genreBias":"jass","roleBias":"brass","postedHours":10,"recurring":true},
+  {"id":"warehouse_rave","name":"Warehouse Rave","requiredType":"band","durationMinutes":100,"payout":138,"fameGain":11,"stressGain":14,"genreBias":"electronic","roleBias":"guitarist","postedHours":14,"recurring":true}
+]

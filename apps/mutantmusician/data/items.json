@@ -1,0 +1,13 @@
+[
+  {"id":"snack_bricks","name":"Snack Bricks","cost":12,"type":"care","description":"Compressed backstage calories.","effects":{"food":26,"mood":2}},
+  {"id":"clean_wipes","name":"Clean Wipes","cost":10,"type":"care","description":"For whatever happened in there.","effects":{"cleanliness":28}},
+  {"id":"cheap_strings","name":"Cheap Strings","cost":16,"type":"care","description":"Terrible but functional.","effects":{"inspiration":8,"mood":3}},
+  {"id":"revival_capsule","name":"Revival Capsule","cost":80,"type":"revive","description":"Shakes a downed mutant back into the world."},
+  {"id":"dna_snapshot_vial","name":"DNA Snapshot Vial","cost":75,"type":"dna","description":"Captures a more exact present-state clone profile."},
+  {"id":"antidepressants","name":"Antidepressants","cost":100,"type":"care","description":"Feel Good Again.","effects":{"mood":30}},
+  {"id":"hard_liquor","name":"Hard Liquor","cost":30,"type":"care","description":"Liquid Courage.","effects":{"inspiration":25,"mood":10,"cleanliness":-10}},
+  {"id":"hallucinogens","name":"Hallucinogens","cost":75,"type":"care","description":"You're tripping, dude.","effects":{"inspiration":50,"mood":10,"cleanliness":-10}},
+  {"id":"liquid_iv","name":"Liquid I.V.","cost":75,"type":"care","description":"Time to hydrate, Rockstar.","effects":{"water":50,"mood":10,"cleanliness":10}},
+  {"id":"imported_zygotes","name":"Imported Zygotes","cost":150,"type":"bonus","description":"Real good bio-juice.","effects":{"talent":10,"originality":10,"weirdness":10}},
+  {"id":"black_market_spores","name":"Black-Market Spores","cost":65,"type":"bonus","description":"Illegal embryo catalyst that adds unstable mutation potential.","effects":{"weirdness":4,"originality":3}}
+]

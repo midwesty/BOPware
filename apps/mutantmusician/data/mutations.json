@@ -1,0 +1,21 @@
+[
+  {"id":"extra_fingers","mods":{"battle":4},"roleAffinity":["guitarist","bassist","strings"],"rarity":"rare"},
+  {"id":"bioluminescent_larynx","mods":{"battle":4},"roleAffinity":["vocalist"],"rarity":"rare"},
+  {"id":"double_lungs","mods":{"battle":3},"roleAffinity":["vocalist","drummer"],"rarity":"common"},
+  {"id":"echolocation_ear","mods":{"battle":3},"roleAffinity":["producer","keys"],"rarity":"common"},
+  {"id":"slime_skin","mods":{"battle":2},"rarity":"common"},
+  {"id":"extra_joints","mods":{"battle":2},"rarity":"common"},
+  {"id":"second_stomach","mods":{"battle":2},"rarity":"common"},
+  {"id":"third_leg","mods":{"battle":3},"rarity":"rare"},
+  {"id":"bone_pick_hands","mods":{"battle":4},"roleAffinity":["guitarist","bassist"],"rarity":"rare"},
+  {"id":"beer_gills","mods":{"battle":3},"roleAffinity":["producer","bassist","brass"],"rarity":"rare"},
+  {"id":"suction_cup_lips","mods":{"battle":4},"roleAffinity":["brass"],"rarity":"rare"},
+  {"id":"photosynthetic_hair","mods":{"battle":2},"rarity":"common"},
+  {"id":"split_tongue_vibrato","mods":{"battle":3},"roleAffinity":["vocalist"],"rarity":"rare"},
+  {"id":"magnet_teeth","mods":{"battle":2},"rarity":"common"},
+  {"id":"echo_parasite","mods":{"battle":5},"rarity":"legendary"},
+  {"id":"many_armed_nightmare","mods":{"battle":5},"roleAffinity":["drummer","producer"],"rarity":"legendary"},
+  {"id":"hardened_fingertips","mods":{"battle":5},"roleAffinity":["guitarist","bassist","strings"],"rarity":"legendary"},
+  {"id":"third_eye","mods":{"battle":5},"roleAffinity":["guitarist","bassist","strings","producer","brass","keys","vocalist","drummer"],"rarity":"legendary"},
+  {"id":"mildew_fuzz","mods":{"battle":1},"rarity":"common"}
+]

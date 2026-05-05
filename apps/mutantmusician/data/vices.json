@@ -1,0 +1,12 @@
+[
+  {"id":"caffeine","name":"Caffeine"},
+  {"id":"nicotine","name":"Nicotine"},
+  {"id":"booze","name":"Booze"},
+  {"id":"validation","name":"Validation"},
+  {"id":"attention","name":"Attention"},
+  {"id":"energy_drinks","name":"Energy Drinks"},
+  {"id":"painkillers","name":"Painkillers"},
+  {"id":"ritual_smoke","name":"Ritual Smoke"},
+  {"id":"doomscrolling","name":"Doomscrolling"},
+  {"id":"cough_syrup_mysticism","name":"Cough Syrup Mysticism"}
+]

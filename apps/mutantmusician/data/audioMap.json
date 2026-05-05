@@ -1,0 +1,5 @@
+{
+  "uiClick":"./assets/audio/ui/click.mp3",
+  "gigStart":"./assets/audio/events/gig-start.mp3",
+  "battle":"./assets/audio/events/battle.mp3"
+}

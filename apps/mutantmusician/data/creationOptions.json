@@ -1,0 +1,86 @@
+{
+  "starterKits": [
+    {
+      "id": "garage_ooze",
+      "name": "Garage Ooze Kit",
+      "description": "Trashy, loud, and probably sticky.",
+      "choices": {"biomass":"venue_mold","body":"compact_goblin","neural":"garage_dust","genre":"punk","vice":"caffeine","catalyst":"feedback_coil","role":"guitarist"}
+    },
+    {
+      "id": "choir_rot",
+      "name": "Choir Rot Kit",
+      "description": "Hymnal slime with suspicious lungs.",
+      "choices": {"biomass":"cemetery_slime","body":"elegant_horror","neural":"church_echo","genre":"folk","vice":"validation","catalyst":"moonlit_serum","role":"vocalist"}
+    },
+    {
+      "id": "synth_boil",
+      "name": "Synth Boil Kit",
+      "description": "Neon circuitry and a sleepless gaze.",
+      "choices": {"biomass":"session_goo","body":"rat_boned","neural":"noise_static","genre":"electronic","vice":"energy_drinks","catalyst":"magnet_worm","role":"producer"}
+    }
+  ],
+  "biomassOptions": [
+    {"id":"cemetery_slime","name":"Cemetery Slime","stats":{"weirdness":7,"charisma":2},"vectors":{"skeletal":16,"nightmare":10}},
+    {"id":"venue_mold","name":"Venue Mold","stats":{"originality":5,"ego":3},"vectors":{"fungal":20,"trashy":14}},
+    {"id":"session_goo","name":"Unknown Session Goo","stats":{"talent":4,"weirdness":4},"vectors":{"synthetic":12,"humanoid":10}},
+    {"id":"green_room_soup","name":"Green Room Soup","stats":{"resilience":6,"ego":2},"vectors":{"trashy":18,"bestial":10}},
+    {"id":"pond_protein","name":"Feral Pond Protein","stats":{"resilience":4,"charisma":1},"vectors":{"aquatic":18,"bestial":14}}
+  ],
+  "bodyOptions": [
+    {"id":"stringbean","name":"Stringbean","stats":{"charisma":2,"resilience":-2},"vectors":{"humanoid":10,"cute":5}},
+    {"id":"compact_goblin","name":"Compact Goblin","stats":{"weirdness":4,"discipline":1},"vectors":{"bestial":16,"trashy":10}},
+    {"id":"amphibian_lump","name":"Amphibian Lump","stats":{"resilience":4},"vectors":{"aquatic":18,"cute":6}},
+    {"id":"elegant_horror","name":"Elegant Horror","stats":{"charisma":6,"ego":2},"vectors":{"elegant":18,"nightmare":14}},
+    {"id":"rat_boned","name":"Rat-Boned","stats":{"originality":4,"resilience":3},"vectors":{"bestial":12,"skeletal":10}}
+  ],
+  "neuralOptions": [
+    {"id":"conservatory_extract","name":"Conservatory Extract","stats":{"technique":8,"discipline":6},"vectors":{"elegant":8}},
+    {"id":"garage_dust","name":"Garage Dust","stats":{"originality":6,"resilience":4},"vectors":{"trashy":14}},
+    {"id":"church_echo","name":"Church Echo","stats":{"charisma":6,"talent":3},"vectors":{"humanoid":6,"elegant":8}},
+    {"id":"noise_static","name":"Noise Static","stats":{"weirdness":8,"originality":4},"vectors":{"synthetic":10,"nightmare":8}},
+    {"id":"dive_bar_memory","name":"Dive Bar Memory","stats":{"ego":5,"resilience":5},"vectors":{"trashy":12}}
+  ],
+  "genreOptions": [
+    {"id":"folk","name":"Folk — Porch Lament","stats":{"charisma":4,"discipline":2},"vectors":{"humanoid":8,"cute":4}},
+    {"id":"punk","name":"Punk — Trash Alley Doctrine","stats":{"originality":6,"ego":2},"vectors":{"trashy":12,"bestial":6}},
+    {"id":"metal","name":"Metal — Forge Hymns","stats":{"resilience":6,"weirdness":4},"vectors":{"nightmare":8}},
+    {"id":"pop","name":"Pop — Synthetic Candy Pulse","stats":{"charisma":8,"ego":4},"vectors":{"cute":10,"synthetic":6}},
+    {"id":"jazz","name":"Jazz — Forbidden Chord Soup","stats":{"talent":6,"originality":5},"vectors":{"elegant":8,"nightmare":4}},
+    {"id":"country","name":"Country — Truck Stop Prophecy","stats":{"charisma":4,"resilience":4},"vectors":{"humanoid":6}},
+    {"id":"classical","name":"Classical — Royal Bone Etiquette","stats":{"technique":7,"discipline":7},"vectors":{"skeletal":6,"elegant":12}},
+    {"id":"dance","name":"Dance - Litterally Cannot Stop","stats":{"technique":7,"discipline":7},"vectors":{"skeletal":6,"elegant":12}},
+    {"id":"mutant_metal","name":"Mutant Metal — Angry and Mutated","stats":{"originality":7,"weirdness":7},"vectors":{"skeletal":10,"bestial":10}},
+    {"id":"electronic","name":"Electronic — Battery Dream Rot","stats":{"weirdness":7,"technique":3},"vectors":{"synthetic":16}}
+  ],
+  "viceOptions": [
+    {"id":"caffeine","name":"Caffeine","stats":{"discipline":2,"ego":1},"vectors":{"synthetic":4}},
+    {"id":"nicotine","name":"Nicotine","stats":{"charisma":2,"health":-2},"vectors":{"trashy":8}},
+    {"id":"booze","name":"Booze","stats":{"charisma":3,"discipline":-2},"vectors":{"trashy":10}},
+    {"id":"validation","name":"Validation","stats":{"charisma":4,"ego":5},"vectors":{"humanoid":6}},
+    {"id":"attention","name":"Attention","stats":{"ego":6,"charisma":3},"vectors":{"cute":4}},
+    {"id":"energy_drinks","name":"Energy Drinks","stats":{"weirdness":2,"discipline":2},"vectors":{"synthetic":8}},
+    {"id":"painkillers","name":"Painkillers","stats":{"resilience":4},"vectors":{"nightmare":6}},
+    {"id":"ritual_smoke","name":"Ritual Smoke","stats":{"weirdness":5},"vectors":{"fungal":8}},
+    {"id":"doomscrolling","name":"Doomscrolling","stats":{"originality":3,"mood":-2},"vectors":{"synthetic":4,"nightmare":4}},
+    {"id":"cough_syrup_mysticism","name":"Cough Syrup Mysticism","stats":{"weirdness":6},"vectors":{"nightmare":10}}
+  ],
+  "catalystOptions": [
+    {"id":"radioactive_reed","name":"Radioactive Reed","stats":{"weirdness":6,"talent":2},"vectors":{"nightmare":8,"synthetic":6}},
+    {"id":"fungal_spore","name":"Fungal Choir Spore","stats":{"originality":5},"vectors":{"fungal":18}},
+    {"id":"feedback_coil","name":"Phantom Feedback Coil","stats":{"weirdness":4,"charisma":3},"vectors":{"synthetic":10,"nightmare":6}},
+    {"id":"moonlit_serum","name":"Moonlit Serum","stats":{"charisma":5,"talent":3},"vectors":{"elegant":10,"nightmare":4}},
+    {"id":"magnet_worm","name":"Magnet Worm","stats":{"technique":3,"weirdness":5},"vectors":{"synthetic":16}},
+    {"id":"tube_amp_blood","name":"Vintage Tube Amp Blood","stats":{"talent":4,"resilience":4},"vectors":{"trashy":8,"synthetic":4}}
+  ],
+  "roleOptions": [
+    {"id":"vocalist","name":"Vocalist","stats":{"charisma":7,"talent":4}},
+    {"id":"guitarist","name":"Guitarist","stats":{"technique":5,"ego":3}},
+    {"id":"bassist","name":"Bassist","stats":{"discipline":4,"resilience":4}},
+    {"id":"drummer","name":"Drummer","stats":{"resilience":7,"discipline":3}},
+    {"id":"keys","name":"Keys","stats":{"technique":6,"talent":3}},
+    {"id":"noise_artist","name":"Noise Artist","stats":{"weirdness":7,"originality":4}},
+    {"id":"producer","name":"Producer Goblin","stats":{"technique":5,"discipline":4}},
+    {"id":"brass","name":"Brass Maniac","stats":{"technique":4,"discipline":5}},
+    {"id":"strings","name":"Strings Freak","stats":{"talent":5,"technique":4}}
+  ]
+}

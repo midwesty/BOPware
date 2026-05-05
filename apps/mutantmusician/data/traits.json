@@ -1,0 +1,23 @@
+[
+  {"id":"perfectionist","mods":{"battle":3},"genreAffinity":["classical","jazz"]},
+  {"id":"stage_diver","mods":{"battle":2},"genreAffinity":["punk","metal"]},
+  {"id":"gear_snob","mods":{"battle":1}},
+  {"id":"studio_rat","mods":{"battle":2},"genreAffinity":["electronic","pop"]},
+  {"id":"prodigy","mods":{"battle":3}},
+  {"id":"diy_spirit","mods":{"battle":2},"genreAffinity":["folk","punk"]},
+  {"id":"bus_sleeper","mods":{"battle":1}},
+  {"id":"melodramatic","mods":{"battle":2}},
+  {"id":"metronome_brain","mods":{"battle":4}},
+  {"id":"crowd_charmer","mods":{"battle":5},"genreAffinity":["pop","country"]},
+  {"id":"flaky","mods":{"battle":-2}},
+  {"id":"pedal_goblin","mods":{"battle":2}},
+  {"id":"unwashed_genius","mods":{"battle":3}},
+  {"id":"loud_crybaby","mods":{"battle":1}},
+  {"id":"tone_priest","mods":{"battle":3}},
+  {"id":"riff_somnambulist","mods":{"battle":3}},
+  {"id":"jammer","mods":{"battle":3}},
+  {"id":"inovative","mods":{"battle":2}},
+  {"id":"true_rockstar","mods":{"battle":2}},
+  {"id":"optimistic_nihilist","mods":{"battle":5},"genreAffinity":["mutant_metal"]},
+  {"id":"snare_hater","mods":{"battle":1}}
+]
