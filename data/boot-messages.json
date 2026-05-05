@@ -1,0 +1,217 @@
+{
+  "firmwareVersion": "0.0.1",
+  "deviceId": "BOP-DECK-7749",
+  "messages": {
+    "first_boot": [
+      {
+        "id": "fb_001",
+        "lines": [
+          "BOPWARE DECK // UNIT 7749",
+          "INITIALIZING PRIMARY SYSTEMS...",
+          "RECONNECTING TO NETWORK AFTER EXTENDED OFFLINE PERIOD",
+          "WARNING: LAST SYNC TIMESTAMP UNREADABLE",
+          "SCANNING FOR KNOWN FREQUENCIES...",
+          "DEEP SPACE SIGNAL DETECTED — ORIGIN UNKNOWN",
+          "SYNCHRONIZING TIME CONTINUUM... PARTIAL SUCCESS",
+          "WELCOME BACK. OR FORWARD. TEMPORAL POSITION UNCLEAR.",
+          "5 APPLICATIONS LOADED INTO LIBRARY",
+          "BEGIN?"
+        ],
+        "shown": false
+      }
+    ],
+    "post_update": [
+      {
+        "id": "pu_001",
+        "updateVersion": "0.0.2",
+        "lines": [
+          "BOPWARE DECK // FIRMWARE UPDATE APPLIED OVERNIGHT",
+          "CHANGELOG RECEIVED VIA DEEP SPACE RELAY:",
+          "— NEW CONTENT PACKAGES INTEGRATED INTO LIBRARY",
+          "— STABILITY PATCH: TEMPORAL DRIFT REDUCED BY 14%",
+          "— UNKNOWN SIGNAL SOURCE NOW PARTIALLY DECODED",
+          "— SEE TRANSMISSIONS FOR FULL LOG",
+          "RESUMING NORMAL OPERATIONS"
+        ],
+        "shown": false,
+        "triggerVersion": "0.0.2"
+      }
+    ],
+    "random": [
+      {
+        "id": "r_001",
+        "weight": 10,
+        "lines": [
+          "ROUTINE BOOT SEQUENCE",
+          "ALL SYSTEMS NOMINAL",
+          "SIGNAL STRENGTH: ACCEPTABLE",
+          "HAVE A PRODUCTIVE SESSION"
+        ]
+      },
+      {
+        "id": "r_002",
+        "weight": 8,
+        "lines": [
+          "LONG-RANGE ANTENNA CALIBRATING...",
+          "FAINT TRANSMISSION DETECTED ON BAND 7",
+          "DECODING... INCOMPLETE",
+          "FRAGMENT: '...they never found the—'",
+          "SIGNAL LOST",
+          "BOOT CONTINUING"
+        ]
+      },
+      {
+        "id": "r_003",
+        "weight": 6,
+        "lines": [
+          "POWER CYCLE COMPLETE",
+          "MEMORY INTEGRITY: 99.7%",
+          "NOTE: 0.3% MEMORY CONTENT UNVERIFIABLE",
+          "ORIGIN OF UNVERIFIABLE CONTENT: UNRESOLVED",
+          "PROCEEDING AS NORMAL"
+        ]
+      },
+      {
+        "id": "r_004",
+        "weight": 5,
+        "lines": [
+          "GOOD MORNING",
+          "AMBIENT TEMPERATURE: UNABLE TO DETERMINE",
+          "GRAVITATIONAL ORIENTATION: ASSUMED STANDARD",
+          "NOTHING UNUSUAL DETECTED",
+          "NOTE: DETECTION ARRAY OFFLINE",
+          "BOOTING"
+        ]
+      },
+      {
+        "id": "r_005",
+        "weight": 4,
+        "lines": [
+          "SCANNING LIBRARY FOR NEW TRANSMISSIONS...",
+          "0 NEW PACKAGES DETECTED",
+          "HOWEVER — SOMETHING CHANGED SINCE LAST SESSION",
+          "UNABLE TO DETERMINE WHAT",
+          "LOGGING FOR REVIEW",
+          "SYSTEM READY"
+        ]
+      },
+      {
+        "id": "r_006",
+        "weight": 3,
+        "lines": [
+          "UPTIME COUNTER RESET",
+          "PREVIOUS SESSION DURATION: CLASSIFIED",
+          "BOOT COUNT: [REDACTED]",
+          "WHY ARE THESE FIELDS REDACTED?",
+          "INVESTIGATING...",
+          "INVESTIGATION SUSPENDED",
+          "SYSTEM READY"
+        ]
+      },
+      {
+        "id": "r_007",
+        "weight": 3,
+        "lines": [
+          "QUANTUM CLOCK SYNC: ATTEMPTED",
+          "RESULT: SEVERAL POSSIBLE DATES IDENTIFIED",
+          "SELECTING MOST PROBABLE DATE",
+          "CONFIDENCE: 73%",
+          "THE OTHER 27% IS NOT YOUR CONCERN",
+          "READY"
+        ]
+      },
+      {
+        "id": "r_008",
+        "weight": 2,
+        "lines": [
+          "INITIALIZING",
+          ".",
+          "..",
+          "...",
+          "SOMETHING PINGED US FROM OUTSIDE THE SYSTEM",
+          "WE PINGED BACK",
+          "NO RESPONSE",
+          "NORMAL BOOT PROCEEDING"
+        ]
+      },
+      {
+        "id": "r_009",
+        "weight": 2,
+        "lines": [
+          "RUNNING DIAGNOSTICS",
+          "HARDWARE: FINE",
+          "SOFTWARE: FINE",
+          "FIRMWARE: FINE",
+          "THAT OTHER THING: FINE",
+          "WHAT OTHER THING?",
+          "QUERY UNRECOGNIZED",
+          "SYSTEM READY"
+        ]
+      },
+      {
+        "id": "r_010",
+        "weight": 1,
+        "lines": [
+          "RARE BOOT SEQUENCE INITIATED",
+          "YOU'VE SEEN THIS BEFORE? UNLIKELY.",
+          "CONGRATULATIONS ON YOUR TIMING",
+          "OR CONDOLENCES",
+          "HARD TO SAY",
+          "LIBRARY LOADED — ENJOY"
+        ]
+      }
+    ]
+  },
+  "transmissions": {
+    "deckMessages": [
+      {
+        "id": "dm_001",
+        "from": "DECK UNIT 7749",
+        "subject": "Welcome",
+        "body": "Initialization complete. Your library is loaded. We've been waiting. Not in a threatening way. In a patient way. There is a difference.",
+        "timestamp": "ON FIRST BOOT",
+        "read": false,
+        "trigger": "first_boot"
+      },
+      {
+        "id": "dm_002",
+        "from": "UNKNOWN RELAY",
+        "subject": "Fwd: ???",
+        "body": "Message forwarded from relay station 9. Original sender: UNRESOLVED. Content: 'Don't forget to check the Grab Lab on a Tuesday. Not this Tuesday. A Tuesday.' End of message.",
+        "timestamp": "RECEIVED: RECENTLY",
+        "read": false,
+        "trigger": "random",
+        "weight": 5
+      },
+      {
+        "id": "dm_003",
+        "from": "BOPWARE SYSTEMS",
+        "subject": "Your Library Is Growing",
+        "body": "A content package was detected and integrated while the device was offline. We're not sure how it got there. That said — it passed all safety checks. Mostly.",
+        "timestamp": "RECEIVED: OVERNIGHT",
+        "read": false,
+        "trigger": "post_update"
+      },
+      {
+        "id": "dm_004",
+        "from": "DEEP SPACE RELAY 7",
+        "subject": "Fragment",
+        "body": "Partial transmission decoded: '...the musician knew something was wrong when the notes started playing before he touched the keys...' Remainder of signal corrupted. File under: interesting.",
+        "timestamp": "RECEIVED: UNKNOWN",
+        "read": false,
+        "trigger": "random",
+        "weight": 3
+      },
+      {
+        "id": "dm_005",
+        "from": "DECK UNIT 7749",
+        "subject": "Self-Diagnostic Report",
+        "body": "Everything is fine. This message was generated automatically. The fact that you are reading it means everything is still fine. Please continue.",
+        "timestamp": "AUTO-GENERATED",
+        "read": false,
+        "trigger": "random",
+        "weight": 8
+      }
+    ]
+  }
+}

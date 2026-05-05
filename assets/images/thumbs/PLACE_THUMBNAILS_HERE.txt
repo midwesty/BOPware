@@ -1,0 +1,1 @@
+Drop 160x100px PNG thumbnails here. Filenames must match apps.json.

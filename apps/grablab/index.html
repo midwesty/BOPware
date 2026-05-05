@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spaced</title>
+  <style>
+    body {
+      margin: 0; padding: 0;
+      background: #0a1628;
+      color: #39ff14;
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .placeholder-title {
+      font-size: 32px;
+      letter-spacing: 0.3em;
+      margin-bottom: 12px;
+      text-shadow: 0 0 20px rgba(57,255,20,0.6);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .placeholder-sub {
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      opacity: 0.5;
+      margin-bottom: 40px;
+    }
+    .placeholder-note {
+      font-size: 10px;
+      opacity: 0.3;
+      letter-spacing: 0.15em;
+      border: 1px solid rgba(57,255,20,0.2);
+      padding: 12px 20px;
+      text-align: center;
+      line-height: 1.8;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--dur) ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--op); }
+      50% { opacity: 0.1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="placeholder-title">SPACED</div>
+  <div class="placeholder-sub">DEEP SPACE SURVIVAL ARCADE</div>
+  <div class="placeholder-note">
+    DROP YOUR GAME FILES INTO<br>
+    /apps/spaced/<br>
+    AND REPLACE THIS FILE WITH YOUR index.html
+  </div>
+
+  <script>
+    // Generate stars
+    const container = document.getElementById('stars');
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const size = Math.random() * 2 + 1;
+      star.style.cssText = `
+        left:${Math.random()*100}%;top:${Math.random()*100}%;
+        width:${size}px;height:${size}px;
+        --dur:${2+Math.random()*3}s;
+        --op:${0.3+Math.random()*0.7};
+      `;
+      container.appendChild(star);
+    }
+
+    // Communicate with parent deck if needed
+    window.addEventListener('message', e => {
+      if (e.data?.type === 'LOAD') {
+        // Load save data here
+        console.log('Game received save data:', e.data.payload);
+      }
+    });
+
+    // Example: send save data to deck
+    function saveGame(data) {
+      window.parent.postMessage({ type: 'SAVE', appId: 'spaced', payload: data }, '*');
+    }
+  </script>
+</body>
+</html>

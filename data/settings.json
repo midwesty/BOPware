@@ -1,0 +1,183 @@
+{
+  "themes": [
+    {
+      "id": "crt_green",
+      "name": "CRT Green",
+      "description": "Classic phosphor display — the original",
+      "colors": {
+        "primary": "#39ff14",
+        "primaryDim": "#1a7a09",
+        "primaryGlow": "rgba(57,255,20,0.4)",
+        "secondary": "#00cc00",
+        "accent": "#80ff60",
+        "background": "#000000",
+        "backgroundPanel": "#050f05",
+        "backgroundCard": "#071007",
+        "text": "#39ff14",
+        "textDim": "#1a7a09",
+        "textMuted": "#0d4d06",
+        "border": "#1a7a09",
+        "borderBright": "#39ff14",
+        "scanlineColor": "rgba(0,0,0,0.15)",
+        "glowColor": "rgba(57,255,20,0.3)"
+      },
+      "isDefault": true
+    },
+    {
+      "id": "pip_amber",
+      "name": "Pip-Boy Amber",
+      "description": "Warm amber phosphor — classic wasteland companion",
+      "colors": {
+        "primary": "#ffb000",
+        "primaryDim": "#8a5a00",
+        "primaryGlow": "rgba(255,176,0,0.4)",
+        "secondary": "#ff8c00",
+        "accent": "#ffd060",
+        "background": "#0a0500",
+        "backgroundPanel": "#100800",
+        "backgroundCard": "#150a00",
+        "text": "#ffb000",
+        "textDim": "#8a5a00",
+        "textMuted": "#4a2f00",
+        "border": "#8a5a00",
+        "borderBright": "#ffb000",
+        "scanlineColor": "rgba(0,0,0,0.15)",
+        "glowColor": "rgba(255,176,0,0.3)"
+      },
+      "isDefault": false
+    },
+    {
+      "id": "gameboy",
+      "name": "Game Boy",
+      "description": "Pea green LCD — old school handheld",
+      "colors": {
+        "primary": "#8bac0f",
+        "primaryDim": "#306230",
+        "primaryGlow": "rgba(139,172,15,0.4)",
+        "secondary": "#0f380f",
+        "accent": "#9bbc0f",
+        "background": "#0f380f",
+        "backgroundPanel": "#133813",
+        "backgroundCard": "#173d17",
+        "text": "#9bbc0f",
+        "textDim": "#8bac0f",
+        "textMuted": "#306230",
+        "border": "#306230",
+        "borderBright": "#9bbc0f",
+        "scanlineColor": "rgba(0,0,0,0.2)",
+        "glowColor": "rgba(139,172,15,0.2)"
+      },
+      "isDefault": false
+    },
+    {
+      "id": "cold_blue",
+      "name": "Cold Blue",
+      "description": "Sci-fi terminal blue — deep space operations",
+      "colors": {
+        "primary": "#00d4ff",
+        "primaryDim": "#0066aa",
+        "primaryGlow": "rgba(0,212,255,0.4)",
+        "secondary": "#0099cc",
+        "accent": "#66eeff",
+        "background": "#000a0f",
+        "backgroundPanel": "#000f1a",
+        "backgroundCard": "#001020",
+        "text": "#00d4ff",
+        "textDim": "#0077bb",
+        "textMuted": "#003355",
+        "border": "#004466",
+        "borderBright": "#00d4ff",
+        "scanlineColor": "rgba(0,0,0,0.15)",
+        "glowColor": "rgba(0,212,255,0.3)"
+      },
+      "isDefault": false
+    },
+    {
+      "id": "blood_red",
+      "name": "Blood Red",
+      "description": "Danger signal red — for when things get serious",
+      "colors": {
+        "primary": "#ff2020",
+        "primaryDim": "#880000",
+        "primaryGlow": "rgba(255,32,32,0.4)",
+        "secondary": "#cc0000",
+        "accent": "#ff6060",
+        "background": "#050000",
+        "backgroundPanel": "#0a0000",
+        "backgroundCard": "#0f0000",
+        "text": "#ff2020",
+        "textDim": "#880000",
+        "textMuted": "#440000",
+        "border": "#660000",
+        "borderBright": "#ff2020",
+        "scanlineColor": "rgba(0,0,0,0.15)",
+        "glowColor": "rgba(255,32,32,0.3)"
+      },
+      "isDefault": false
+    },
+    {
+      "id": "technicolor",
+      "name": "Technicolor",
+      "description": "Vaporwave RGB — if the deck fell into a neon dream",
+      "colors": {
+        "primary": "#ff00ff",
+        "primaryDim": "#880088",
+        "primaryGlow": "rgba(255,0,255,0.4)",
+        "secondary": "#00ffff",
+        "accent": "#ffff00",
+        "background": "#050005",
+        "backgroundPanel": "#0a000a",
+        "backgroundCard": "#0f000f",
+        "text": "#ff00ff",
+        "textDim": "#cc00cc",
+        "textMuted": "#660066",
+        "border": "#880088",
+        "borderBright": "#ff00ff",
+        "scanlineColor": "rgba(0,0,0,0.1)",
+        "glowColor": "rgba(255,0,255,0.3)"
+      },
+      "isDefault": false
+    },
+    {
+      "id": "retro_white",
+      "name": "Clean White",
+      "description": "Apple-retro monochrome — minimal and sharp",
+      "colors": {
+        "primary": "#e8e8e8",
+        "primaryDim": "#888888",
+        "primaryGlow": "rgba(232,232,232,0.2)",
+        "secondary": "#aaaaaa",
+        "accent": "#ffffff",
+        "background": "#0a0a0a",
+        "backgroundPanel": "#111111",
+        "backgroundCard": "#181818",
+        "text": "#e8e8e8",
+        "textDim": "#888888",
+        "textMuted": "#444444",
+        "border": "#333333",
+        "borderBright": "#888888",
+        "scanlineColor": "rgba(0,0,0,0.2)",
+        "glowColor": "rgba(232,232,232,0.15)"
+      },
+      "isDefault": false
+    }
+  ],
+  "defaults": {
+    "theme": "crt_green",
+    "scanlines": true,
+    "scanlinesOpacity": 0.15,
+    "crtCurve": false,
+    "glowEffect": true,
+    "glowIntensity": 0.7,
+    "ambientMusic": true,
+    "ambientVolume": 0.3,
+    "sfxEnabled": true,
+    "sfxVolume": 0.7,
+    "layout": "landscape",
+    "showClock": true,
+    "showSignalBar": true,
+    "showBattery": true,
+    "bootAnimationSkippable": false,
+    "autoResume": true
+  }
+}

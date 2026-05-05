@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="BOPware Deck — Better Off Published LLC">
+  <title>BOPware Deck v0.0.1</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=VT323&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css">
+
+  <style>
+    /* Inline critical: fade-out animation for windows */
+    @keyframes fadeOut {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.97); }
+    }
+
+    /* App window inline content area */
+    .window-content {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: var(--color-bg);
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-primary-dim) transparent;
+    }
+
+    /* Main layout grid */
+    #deck-screen {
+      display: grid;
+      grid-template-rows: var(--statusbar-height) 1fr var(--taskbar-height);
+    }
+
+    #deck-screen.game-active {
+      grid-template-rows: var(--statusbar-height) 1fr 0px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     BOOT SCREEN
+     ============================================================ -->
+<div id="boot-screen">
+  <div class="boot-static"></div>
+
+  <!-- Phase 1: BIOS -->
+  <div class="boot-phase" id="boot-bios"></div>
+
+  <!-- Phase 2: Static burst -->
+  <div class="boot-phase" id="boot-static-burst"></div>
+
+  <!-- Phase 3: Logo -->
+  <div class="boot-phase" id="boot-logo">
+    <!-- Sphere logo (CSS-only) -->
+    <div class="boot-logo-sphere">
+      <div class="sphere-core"></div>
+      <div class="sphere-ring"></div>
+      <div class="sphere-ring"></div>
+      <div class="sphere-ring"></div>
+    </div>
+    <div class="boot-logo-text">
+      <div class="boot-company-name">BOPWARE</div>
+      <div class="boot-product-name">DECK · UNIT 7749</div>
+      <div class="boot-tagline">BETTER OFF PUBLISHED LLC · EST. UNKNOWN</div>
+    </div>
+  </div>
+
+  <!-- Phase 4: Boot messages -->
+  <div class="boot-phase" id="boot-messages">
+    <!-- Lines injected by JS -->
+    <div class="boot-progress-bar">
+      <div class="boot-progress-fill" id="boot-progress-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     DECK SCREEN
+     ============================================================ -->
+<div id="deck-screen">
+
+  <!-- CRT overlay -->
+  <div class="crt-overlay" aria-hidden="true"></div>
+
+  <!-- STATUS BAR -->
+  <div id="status-bar" role="banner" aria-label="System status">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="main-content" role="main">
+
+    <!-- HOME SCREEN -->
+    <div id="home-screen" role="region" aria-label="Home">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- LIBRARY VIEW (overlay) -->
+    <div id="library-view" role="dialog" aria-label="Game Library" aria-modal="true">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- WINDOWS LAYER -->
+    <div id="windows-layer" aria-label="Open applications">
+      <!-- App windows injected here by WindowManager -->
+    </div>
+
+    <!-- NOTESTICK LAYER -->
+    <div id="notestick-layer" aria-label="Sticky notes">
+      <!-- Notes injected here by NoteStickApp -->
+    </div>
+
+    <!-- RETURN TO DECK button (shows when game is running) -->
+    <button id="return-to-deck" aria-label="Return to BOPware Deck menu">
+      ◄ DECK
+      <span style="font-size:8px;opacity:0.6;">[` ~]</span>
+    </button>
+
+  </div>
+
+  <!-- TASKBAR -->
+  <div id="taskbar" role="navigation" aria-label="System taskbar">
+    <!-- Populated by JS -->
+  </div>
+
+</div>
+
+<!-- ============================================================
+     SCRIPTS — Load order matters
+     ============================================================ -->
+<script src="js/audio.js"></script>
+<script src="js/state.js"></script>
+<script src="js/themes.js"></script>
+<script src="js/windows.js"></script>
+<script src="js/notestick.js"></script>
+<script src="js/boot.js"></script>
+<script src="js/deck.js"></script>
+
+<script>
+  /**
+   * BOPWARE DECK — MAIN ENTRY POINT
+   * Orchestrates boot sequence → deck init
+   */
+  (async function init() {
+    // Show boot screen immediately
+    document.getElementById('boot-screen').style.display = 'flex';
+    document.getElementById('deck-screen').style.opacity = '0';
+    document.getElementById('deck-screen').style.pointerEvents = 'none';
+
+    // Load required data before boot
+    await window.AudioMgr.init();
+    await window.BootSeq.init(async () => {
+      // Boot complete callback
+      document.getElementById('deck-screen').style.opacity = '1';
+      document.getElementById('deck-screen').style.pointerEvents = '';
+      document.getElementById('deck-screen').style.transition = 'opacity 0.5s ease';
+    });
+
+    // Run boot sequence (this also inits BopState internally on first call)
+    // We do a minimal early init here so boot can reference state
+    try {
+      const settingsRes = await fetch('data/settings.json');
+      const settingsData = await settingsRes.json();
+      await window.BopState.init(settingsData);
+    } catch (e) {
+      await window.BopState.init({});
+    }
+
+    // Run the cinematic boot
+    await window.BootSeq.run();
+
+    // Boot done — initialize full deck UI
+    await window.DeckUI.init();
+
+    // Keyboard shortcut: tilde/backtick to escape game
+    document.addEventListener('keydown', e => {
+      if (e.key === '`' || e.key === '~') {
+        e.preventDefault();
+        window.WinMgr.handleEscapeKey();
+      }
+      // Easter egg: Konami code tracker
+      _konamiTrack(e.key);
+    });
+
+    // Konami code easter egg
+    const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let konamiPos = 0;
+
+    function _konamiTrack(key) {
+      if (key === KONAMI[konamiPos]) {
+        konamiPos++;
+        if (konamiPos === KONAMI.length) {
+          konamiPos = 0;
+          _konamiActivate();
+        }
+      } else {
+        konamiPos = 0;
+      }
+    }
+
+    function _konamiActivate() {
+      // Hidden Konami easter egg transmission
+      window.BopState.addTransmission({
+        id: 'konami_egg',
+        from: 'DECK UNIT 7749 // SECURE CHANNEL',
+        subject: '// CLASSIFIED //  CODE ACCEPTED',
+        body: "Oh. You found it. We weren't sure anyone would. The code is real. You are real. The deck is... also real. Probably. This message will self-destruct in exactly: it won't. We don't have that feature. But we told you it would to seem cooler. Enjoy your secret. — The Deck",
+        timestamp: 'TRANSMISSION: ENCRYPTED',
+        trigger: 'secret',
+      });
+      window.DeckUI._updateNotifBadge();
+      window.AudioMgr?.play('system', 'signal_ping');
+
+      // Flash the screen green briefly
+      const flash = document.createElement('div');
+      flash.style.cssText = `
+        position:fixed;inset:0;background:var(--color-primary);
+        opacity:0;z-index:9999;pointer-events:none;
+        animation:konamiFlash 0.5s ease forwards;
+      `;
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 600);
+    }
+  })();
+</script>
+
+<style>
+  @keyframes konamiFlash {
+    0% { opacity: 0; }
+    20% { opacity: 0.15; }
+    100% { opacity: 0; }
+  }
+</style>
+
+</body>
+</html>

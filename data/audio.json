@@ -1,0 +1,109 @@
+{
+  "sfx": {
+    "ui": {
+      "click": "assets/audio/sfx/ui_click.mp3",
+      "click_heavy": "assets/audio/sfx/ui_click_heavy.mp3",
+      "hover": "assets/audio/sfx/ui_hover.mp3",
+      "back": "assets/audio/sfx/ui_back.mp3",
+      "confirm": "assets/audio/sfx/ui_confirm.mp3",
+      "error": "assets/audio/sfx/ui_error.mp3",
+      "navigate": "assets/audio/sfx/ui_navigate.mp3"
+    },
+    "system": {
+      "boot_start": "assets/audio/sfx/sys_boot_start.mp3",
+      "boot_beep": "assets/audio/sfx/sys_boot_beep.mp3",
+      "boot_complete": "assets/audio/sfx/sys_boot_complete.mp3",
+      "boot_chime": "assets/audio/sfx/sys_boot_chime.mp3",
+      "static_burst": "assets/audio/sfx/sys_static_burst.mp3",
+      "power_on_hum": "assets/audio/sfx/sys_power_hum.mp3",
+      "signal_ping": "assets/audio/sfx/sys_signal_ping.mp3",
+      "transmission_receive": "assets/audio/sfx/sys_transmission.mp3"
+    },
+    "apps": {
+      "app_open": "assets/audio/sfx/app_open.mp3",
+      "app_close": "assets/audio/sfx/app_close.mp3",
+      "app_minimize": "assets/audio/sfx/app_minimize.mp3",
+      "game_launch": "assets/audio/sfx/game_launch.mp3",
+      "window_drag": "assets/audio/sfx/window_drag.mp3"
+    },
+    "notestick": {
+      "note_place": "assets/audio/sfx/note_place.mp3",
+      "note_peel": "assets/audio/sfx/note_peel.mp3",
+      "note_delete": "assets/audio/sfx/note_delete.mp3",
+      "note_write": "assets/audio/sfx/note_write.mp3"
+    },
+    "media": {
+      "play": "assets/audio/sfx/media_play.mp3",
+      "pause": "assets/audio/sfx/media_pause.mp3",
+      "skip": "assets/audio/sfx/media_skip.mp3",
+      "volume_change": "assets/audio/sfx/media_volume.mp3"
+    },
+    "settings": {
+      "toggle_on": "assets/audio/sfx/settings_toggle_on.mp3",
+      "toggle_off": "assets/audio/sfx/settings_toggle_off.mp3",
+      "theme_change": "assets/audio/sfx/settings_theme_change.mp3"
+    }
+  },
+  "music": {
+    "ambient": [
+      {
+        "id": "ambient_01",
+        "title": "Deep Signal",
+        "artist": "BOPware Audio",
+        "file": "assets/audio/music/ambient_deep_signal.mp3",
+        "duration": 180,
+        "loop": true,
+        "context": "home_screen"
+      },
+      {
+        "id": "ambient_02",
+        "title": "Orbital Drift",
+        "artist": "BOPware Audio",
+        "file": "assets/audio/music/ambient_orbital_drift.mp3",
+        "duration": 210,
+        "loop": true,
+        "context": "home_screen"
+      },
+      {
+        "id": "ambient_03",
+        "title": "Frequency Unknown",
+        "artist": "BOPware Audio",
+        "file": "assets/audio/music/ambient_frequency_unknown.mp3",
+        "duration": 195,
+        "loop": true,
+        "context": "home_screen"
+      }
+    ],
+    "boot": [
+      {
+        "id": "boot_theme",
+        "title": "BOPware Deck Boot",
+        "file": "assets/audio/music/boot_theme.mp3",
+        "context": "boot_sequence"
+      }
+    ],
+    "player": {
+      "note": "Drop your audio files into assets/audio/music/player/ and add entries here",
+      "tracks": [
+        {
+          "id": "track_placeholder_01",
+          "title": "Track Title Here",
+          "artist": "Artist Name",
+          "album": "Album Name",
+          "file": "assets/audio/music/player/track_01.mp3",
+          "artwork": "assets/images/album_art/track_01.png",
+          "duration": 0
+        },
+        {
+          "id": "track_placeholder_02",
+          "title": "Another Track",
+          "artist": "Artist Name",
+          "album": "Album Name",
+          "file": "assets/audio/music/player/track_02.mp3",
+          "artwork": "assets/images/album_art/track_02.png",
+          "duration": 0
+        }
+      ]
+    }
+  }
+}
