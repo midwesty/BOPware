@@ -1,0 +1,70 @@
+{
+  "version": "0.0.1",
+  "lastUpdated": "2026-01-01",
+  "featured": {
+    "type": "game",
+    "id": "spaced",
+    "title": "SPACED",
+    "subtitle": "NOW AVAILABLE IN YOUR LIBRARY",
+    "description": "Lost signals. Drifting debris. Something is out there between the stars — and it found you first. Deep space survival arcade, available now.",
+    "badgeText": "FEATURED",
+    "badgeColor": "primary",
+    "ctaLabel": "▶ PLAY NOW",
+    "ctaAction": "launch",
+    "ctaTarget": "spaced",
+    "backgroundGradient": "linear-gradient(135deg, #0a1628 0%, #001040 60%, #000820 100%)",
+    "accentColor": "#39ff14"
+  },
+  "news": [
+    {
+      "id": "news_001",
+      "date": "2026-01-01",
+      "category": "LAUNCH",
+      "categoryColor": "primary",
+      "headline": "BOPware Deck v0.0.1 — We're Live",
+      "body": "The deck is online. Five games loaded. Deep space relay connected. We don't know how long we've been offline — the clock says something, but we're not certain it's right. Either way: welcome. Your library is ready.",
+      "pinned": true
+    },
+    {
+      "id": "news_002",
+      "date": "2026-01-01",
+      "category": "SIGNAL",
+      "categoryColor": "amber",
+      "headline": "Faint Transmission Detected on Band 7",
+      "body": "Long-range antenna picked up a fragmented signal during initialization. Decoding is ongoing. Early analysis suggests it may be related to a future content package. Or it's interference. The antenna has been wrong before.",
+      "pinned": false
+    },
+    {
+      "id": "news_003",
+      "date": "2026-01-01",
+      "category": "TIP",
+      "categoryColor": "dim",
+      "headline": "Try the Konami Code",
+      "body": "The deck responds to certain input sequences from older Earth communication protocols. Some call them 'cheat codes.' The deck calls them 'undocumented features.' Results may vary. Or may not vary at all. Impossible to say.",
+      "pinned": false
+    }
+  ],
+  "patchNotes": [
+    {
+      "version": "0.0.1",
+      "date": "2026-01-01",
+      "label": "INITIAL DEPLOYMENT",
+      "notes": [
+        "Deck OS initialized for the first time (as far as we can tell)",
+        "5 games loaded into library: Spaced, Grab Lab, Mutant Musician Lab, Game Buddy, SurviveAll",
+        "NoteStick app operational — sticky notes persist between sessions",
+        "BOP Media player ready — drop your audio files into assets/audio/music/player/",
+        "Transmissions system online — check your inbox",
+        "Boot sequence: 4-phase cinematic initialization active",
+        "7 color themes available in Settings",
+        "CRT scanline toggle available in Settings",
+        "Konami code easter egg: classified",
+        "1 mystery slot in library: locked pending future signal decode"
+      ]
+    }
+  ],
+  "settings": {
+    "showOnBoot": true,
+    "autoOpenDelay": 200
+  }
+}

@@ -1799,3 +1799,416 @@ button, a, [data-clickable], .game-card, .taskbar-btn, .nav-btn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ============================================================
+   WINDOW TRAY — minimized windows bar above taskbar
+   ============================================================ */
+#window-tray {
+  position: fixed;
+  bottom: var(--taskbar-height, 56px);
+  left: 0;
+  right: 0;
+  height: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 8px 4px;
+  gap: 6px;
+  z-index: 150;
+  pointer-events: none;
+  overflow: hidden;
+  overflow-x: auto;
+  scrollbar-width: none;
+  transition: height 0.2s ease;
+}
+
+#window-tray::-webkit-scrollbar { display: none; }
+
+#window-tray.tray-visible {
+  height: 40px;
+  pointer-events: auto;
+}
+
+.tray-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 4px 8px 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-dim);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.5);
+  transition: border-color 0.1s, color 0.1s, box-shadow 0.1s;
+  animation: traySlideUp 0.2s ease forwards;
+}
+
+.tray-chip:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 -2px 12px var(--color-glow);
+}
+
+.tray-chip-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.tray-chip-title {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tray-chip-close {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0 0 0 4px;
+  line-height: 1;
+  font-family: var(--font-mono);
+  transition: color 0.1s;
+}
+
+.tray-chip-close:hover {
+  color: #ff4040;
+}
+
+@keyframes traySlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   NEWS APP
+   ============================================================ */
+.news-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+/* Masthead */
+.news-masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--color-bg-panel);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.news-masthead-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Mini sphere for news header */
+.news-sphere {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.news-sphere-core {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    var(--color-accent) 0%,
+    var(--color-primary) 40%,
+    var(--color-primary-dim) 100%
+  );
+  box-shadow: 0 0 8px var(--color-primary-glow);
+}
+
+.news-sphere-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-primary);
+  border-bottom-color: transparent;
+  animation: ringOrbit 2s linear infinite;
+  opacity: 0.7;
+}
+
+.news-masthead-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--color-primary);
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 8px var(--color-primary-glow);
+}
+
+.news-masthead-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.2em;
+  margin-top: 1px;
+}
+
+.news-masthead-date {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+}
+
+/* Scrollable content */
+.news-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-dim) transparent;
+}
+
+.news-scroll::-webkit-scrollbar { width: 4px; }
+.news-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-primary-dim);
+  border-radius: 2px;
+}
+
+/* Featured block */
+.news-featured {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.news-featured::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 20px,
+    rgba(0,0,0,0.05) 20px, rgba(0,0,0,0.05) 40px
+  );
+  pointer-events: none;
+}
+
+.news-featured-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  border: 1px solid;
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-bottom: 8px;
+}
+
+.news-featured-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+  margin-bottom: 4px;
+  text-shadow: 0 0 20px currentColor;
+}
+
+.news-featured-subtitle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.news-featured-desc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-dim);
+  line-height: 1.6;
+  margin-bottom: 14px;
+  max-width: 480px;
+}
+
+.news-featured-cta {
+  display: inline-block;
+  color: var(--color-bg);
+  font-family: var(--font-mono);
+  font-weight: bold;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  padding: 7px 18px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.news-featured-cta:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.news-featured-cta:active {
+  transform: translateY(0);
+}
+
+/* Section label */
+.news-section-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.25em;
+  padding: 10px 16px 6px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-panel);
+}
+
+/* News items */
+.news-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+  transition: background var(--transition-fast);
+}
+
+.news-item:hover {
+  background: var(--color-bg-panel);
+}
+
+.news-item.news-pinned {
+  border-left: 2px solid var(--color-primary);
+}
+
+.news-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.news-category {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+  border: 1px solid;
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.news-date {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.08em;
+}
+
+.news-pin-icon {
+  font-size: 10px;
+  margin-left: auto;
+  opacity: 0.6;
+}
+
+.news-headline {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.news-body {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-dim);
+  line-height: 1.6;
+}
+
+.news-empty {
+  padding: 24px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.15em;
+}
+
+/* Patch notes */
+.news-patch-block {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.news-patch-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.news-patch-version {
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--color-primary);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.news-patch-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-text-dim);
+  letter-spacing: 0.15em;
+  border: 1px solid var(--color-border);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.news-patch-date {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--color-text-muted);
+  margin-left: auto;
+}
+
+.news-patch-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.news-patch-list li {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-dim);
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
+}
+
+.news-patch-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--color-primary-dim);
+}
+

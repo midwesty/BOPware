@@ -1,12 +1,13 @@
 /**
  * BOPWARE DECK — Main UI Controller
- * Home screen, game rows, taskbar, status bar, library
+ * Home screen, game rows, taskbar, status bar, library, news
  */
 
 class DeckUI {
   constructor() {
     this.appsData = null;
     this.settingsData = null;
+    this.newsData = null;
     this.currentFilter = 'all';
     this.clockInterval = null;
     this.batteryLevel = 87;
@@ -16,13 +17,14 @@ class DeckUI {
   // ── INIT ─────────────────────────────────────────────────────
 
   async init() {
-    // Load app manifest
-    const [appsRes, settingsRes] = await Promise.all([
+    const [appsRes, settingsRes, newsRes] = await Promise.all([
       fetch('data/apps.json'),
       fetch('data/settings.json'),
+      fetch('data/news.json').catch(() => ({ json: () => null })),
     ]);
     this.appsData = await appsRes.json();
     this.settingsData = await settingsRes.json();
+    try { this.newsData = await newsRes.json(); } catch (e) { this.newsData = null; }
 
     // Init subsystems
     await window.BopState.init(this.settingsData);
@@ -43,19 +45,21 @@ class DeckUI {
     this._buildLibrary();
     this._bindGlobalEvents();
 
-    // Status bar clock
     this._startClock();
     this._startSignalFlicker();
-
-    // Update notification badge
     this._updateNotifBadge();
+
+    // Auto-open news after boot if configured
+    if (this.newsData?.settings?.showOnBoot !== false) {
+      const delay = this.newsData?.settings?.autoOpenDelay ?? 200;
+      setTimeout(() => this.openApp('news'), delay);
+    }
   }
 
   // ── STATUS BAR ────────────────────────────────────────────────
 
   _buildStatusBar() {
     const bar = document.getElementById('status-bar');
-    const settings = window.BopState.getSettings();
     const ver = this.appsData?.version ?? '0.0.1';
 
     bar.innerHTML = `
@@ -99,10 +103,7 @@ class DeckUI {
       if (!el) return;
       const now = new Date();
       el.textContent = now.toLocaleTimeString('en-US', {
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
+        hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit',
       });
     };
     update();
@@ -110,7 +111,6 @@ class DeckUI {
   }
 
   _startSignalFlicker() {
-    // Fake signal that occasionally dips
     setInterval(() => {
       if (Math.random() < 0.1) {
         this.signalStrength = Math.max(1, this.signalStrength - 1);
@@ -119,7 +119,6 @@ class DeckUI {
       }
       this._updateSignalBars();
 
-      // Fake battery drain
       if (Math.random() < 0.02) {
         this.batteryLevel = Math.max(5, this.batteryLevel - 1);
         const lvl = document.getElementById('battery-level');
@@ -131,8 +130,7 @@ class DeckUI {
   }
 
   _updateSignalBars() {
-    const bars = document.querySelectorAll('.signal-bar');
-    bars.forEach((bar, i) => {
+    document.querySelectorAll('.signal-bar').forEach((bar, i) => {
       bar.classList.toggle('active', i < this.signalStrength);
     });
   }
@@ -153,7 +151,6 @@ class DeckUI {
 
   _buildHomeScreen() {
     const screen = document.getElementById('home-screen');
-    const rows = this.appsData?.rows ?? [];
 
     screen.innerHTML = `
       <div class="home-header">
@@ -162,12 +159,8 @@ class DeckUI {
           <span>BETTER OFF PUBLISHED LLC</span>
         </div>
         <div class="home-actions">
-          <button class="icon-btn" id="show-library-btn">
-            ▦ ALL GAMES
-          </button>
-          <button class="icon-btn" id="add-note-btn" title="New sticky note">
-            📝 NOTE
-          </button>
+          <button class="icon-btn" id="show-library-btn">▦ ALL GAMES</button>
+          <button class="icon-btn" id="add-note-btn" title="New sticky note">📝 NOTE</button>
         </div>
       </div>
       <div id="game-rows"></div>
@@ -224,9 +217,7 @@ class DeckUI {
       container.appendChild(rowEl);
 
       const scrollContainer = rowEl.querySelector(`#row_${row.id}`);
-      rowGames.forEach(game => {
-        scrollContainer.appendChild(this._buildGameCard(game));
-      });
+      rowGames.forEach(game => scrollContainer.appendChild(this._buildGameCard(game)));
     });
   }
 
@@ -236,7 +227,6 @@ class DeckUI {
     card.dataset.gameId = game.id;
 
     const isFav = window.BopState.isFavorite(game.id);
-    const gameState = window.BopState.getGameData(game.id);
 
     card.innerHTML = `
       <button class="card-favorite ${isFav ? 'active' : ''}" title="Favorite" data-fav-btn>
@@ -266,10 +256,8 @@ class DeckUI {
       </div>
     `;
 
-    // Hover SFX
     card.addEventListener('mouseenter', () => window.AudioMgr?.play('ui', 'hover'));
 
-    // Favorite
     card.querySelector('[data-fav-btn]').addEventListener('click', e => {
       e.stopPropagation();
       window.AudioMgr?.play('ui', 'click');
@@ -280,7 +268,6 @@ class DeckUI {
       btn.classList.toggle('active', fav);
     });
 
-    // Launch
     const launchBtn = card.querySelector('[data-launch]');
     if (launchBtn) {
       launchBtn.addEventListener('click', e => {
@@ -289,7 +276,6 @@ class DeckUI {
       });
     }
 
-    // Info
     card.querySelector('[data-info]').addEventListener('click', e => {
       e.stopPropagation();
       window.AudioMgr?.play('ui', 'click');
@@ -325,10 +311,9 @@ class DeckUI {
     });
   }
 
-  // ── LIBRARY / SHOW ALL ────────────────────────────────────────
+  // ── LIBRARY ───────────────────────────────────────────────────
 
   _buildLibrary() {
-    const games = this.appsData?.games ?? [];
     const libView = document.getElementById('library-view');
 
     libView.innerHTML = `
@@ -376,32 +361,23 @@ class DeckUI {
       case 'new':
         games = games.filter(g => g.isNew);
         break;
-      case 'recent': {
-        const recentIds = window.BopState.getFavorites(); // reuse state — can add separate recent tracking
-        games = games.filter(g => {
-          const d = window.BopState.getGameData(g.id);
-          return d.lastPlayed;
-        }).sort((a, b) => {
-          const da = window.BopState.getGameData(a.id).lastPlayed ?? '';
-          const db = window.BopState.getGameData(b.id).lastPlayed ?? '';
-          return db.localeCompare(da);
-        });
+      case 'recent':
+        games = games.filter(g => window.BopState.getGameData(g.id).lastPlayed)
+          .sort((a, b) => {
+            const da = window.BopState.getGameData(a.id).lastPlayed ?? '';
+            const db = window.BopState.getGameData(b.id).lastPlayed ?? '';
+            return db.localeCompare(da);
+          });
         break;
-      }
       case 'favorites':
         games = games.filter(g => window.BopState.isFavorite(g.id));
         break;
       case 'alpha':
         games = games.sort((a, b) => a.title.localeCompare(b.title));
         break;
-      case 'custom':
-        // In custom mode, user-pinned order (same as default for now)
-        break;
     }
 
-    games.forEach(game => {
-      grid.appendChild(this._buildGameCard(game));
-    });
+    games.forEach(game => grid.appendChild(this._buildGameCard(game)));
   }
 
   _showLibrary() {
@@ -411,7 +387,7 @@ class DeckUI {
     window.AudioMgr?.play('ui', 'click');
   }
 
-  // ── GAME INFO MODAL ───────────────────────────────────────────
+  // ── GAME INFO ─────────────────────────────────────────────────
 
   _showGameInfo(game) {
     const existing = document.getElementById('game-info-modal');
@@ -427,12 +403,8 @@ class DeckUI {
 
     modal.innerHTML = `
       <div style="
-        background:var(--color-bg-panel);
-        border:1px solid var(--color-border);
-        border-radius:8px;
-        padding:24px;
-        max-width:380px;
-        width:90%;
+        background:var(--color-bg-panel);border:1px solid var(--color-border);
+        border-radius:8px;padding:24px;max-width:380px;width:90%;
         box-shadow:0 0 32px var(--color-glow);
       ">
         <div style="font-family:var(--font-display);font-size:16px;color:var(--color-primary);margin-bottom:8px;letter-spacing:0.1em;">
@@ -448,8 +420,7 @@ class DeckUI {
           <button id="info-close-btn" style="
             background:transparent;border:1px solid var(--color-border);
             color:var(--color-text-dim);font-family:var(--font-mono);
-            font-size:10px;padding:6px 14px;border-radius:4px;cursor:pointer;
-            letter-spacing:0.1em;
+            font-size:10px;padding:6px 14px;border-radius:4px;cursor:pointer;letter-spacing:0.1em;
           ">CLOSE</button>
           ${game.unlocked ? `
           <button id="info-play-btn" style="
@@ -465,24 +436,16 @@ class DeckUI {
     document.body.appendChild(modal);
 
     modal.addEventListener('click', e => {
-      if (e.target === modal) {
-        window.AudioMgr?.play('ui', 'back');
-        modal.remove();
-      }
+      if (e.target === modal) { window.AudioMgr?.play('ui', 'back'); modal.remove(); }
     });
 
     modal.querySelector('#info-close-btn').addEventListener('click', () => {
-      window.AudioMgr?.play('ui', 'back');
-      modal.remove();
+      window.AudioMgr?.play('ui', 'back'); modal.remove();
     });
 
-    const playBtn = modal.querySelector('#info-play-btn');
-    if (playBtn) {
-      playBtn.addEventListener('click', () => {
-        modal.remove();
-        this.launchGame(game);
-      });
-    }
+    modal.querySelector('#info-play-btn')?.addEventListener('click', () => {
+      modal.remove(); this.launchGame(game);
+    });
   }
 
   // ── TASKBAR ───────────────────────────────────────────────────
@@ -494,6 +457,14 @@ class DeckUI {
     let html = `
       <button class="taskbar-home-btn" id="home-btn">⌂ HOME</button>
       <div class="taskbar-separator"></div>
+    `;
+
+    // News button always first
+    html += `
+      <button class="taskbar-btn" data-app-id="news" title="BOPware News & Updates">
+        <span class="btn-icon">📰</span>
+        <span class="btn-label">NEWS</span>
+      </button>
     `;
 
     sysApps.forEach(app => {
@@ -508,7 +479,6 @@ class DeckUI {
     });
 
     html += `<div class="taskbar-spacer"></div>`;
-
     html += `
       <button class="taskbar-btn" id="settings-taskbar-btn" title="Settings">
         <span class="btn-icon">⚙️</span>
@@ -518,18 +488,17 @@ class DeckUI {
 
     taskbar.innerHTML = html;
 
-    // App buttons
     taskbar.querySelectorAll('[data-app-id]').forEach(btn => {
       btn.addEventListener('click', () => {
         window.AudioMgr?.play('ui', 'click');
         this.openApp(btn.dataset.appId);
-        btn.classList.toggle('active');
+        btn.classList.add('active');
+        setTimeout(() => btn.classList.remove('active'), 300);
       });
     });
 
     document.getElementById('home-btn').addEventListener('click', () => {
       window.AudioMgr?.play('ui', 'click');
-      // Scroll home screen to top
       document.getElementById('home-screen')?.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
@@ -538,7 +507,6 @@ class DeckUI {
       this.openApp('settings');
     });
 
-    // Update unread periodically
     window.BopState.on('transmissionReceived', () => {
       this._updateNotifBadge();
       this._updateTaskbarBadges();
@@ -559,32 +527,151 @@ class DeckUI {
 
   openApp(appId) {
     switch (appId) {
-      case 'notestick':
-        window.NoteStickApp.createNew();
-        break;
-      case 'bopmedia':
-        this._openMediaPlayer();
-        break;
-      case 'messages':
-        this._openTransmissions();
-        break;
-      case 'settings':
-        this._openSettings();
-        break;
+      case 'notestick':   window.NoteStickApp.createNew(); break;
+      case 'bopmedia':    this._openMediaPlayer(); break;
+      case 'messages':    this._openTransmissions(); break;
+      case 'settings':    this._openSettings(); break;
+      case 'news':        this._openNews(); break;
       default: {
         const app = this.appsData?.systemApps?.find(a => a.id === appId);
         if (app?.path) {
           window.WinMgr.open({
-            id: appId,
-            title: app.title,
-            src: app.path,
-            width: 600,
-            height: 450,
-            icon: app.icon,
+            id: appId, title: app.title, src: app.path,
+            width: 600, height: 450, icon: app.icon,
           });
         }
       }
     }
+  }
+
+  // ── NEWS APP ─────────────────────────────────────────────────
+
+  _openNews() {
+    const nd = this.newsData;
+
+    const win = window.WinMgr.open({
+      id: 'news',
+      title: 'BOPWARE NEWS',
+      width: Math.min(window.innerWidth - 40, 680),
+      height: Math.min(window.innerHeight - 80, 580),
+      icon: '📰',
+    });
+
+    const content = window.WinMgr.getWindowContent('news');
+    if (!content) return;
+
+    // Category color map
+    const catColor = (c) => {
+      const map = {
+        primary: 'var(--color-primary)',
+        amber: '#ffb000',
+        dim: 'var(--color-text-muted)',
+        red: '#ff4040',
+        blue: '#00d4ff',
+      };
+      return map[c] ?? 'var(--color-primary)';
+    };
+
+    // Featured block
+    const feat = nd?.featured;
+    const featHTML = feat ? `
+      <div class="news-featured" style="background:${feat.backgroundGradient ?? 'var(--color-bg-card)'}">
+        <div class="news-featured-badge" style="color:${feat.accentColor ?? 'var(--color-primary)'};border-color:${feat.accentColor ?? 'var(--color-primary)'}">
+          ${feat.badgeText ?? 'FEATURED'}
+        </div>
+        <div class="news-featured-title" style="color:${feat.accentColor ?? 'var(--color-primary)'}">
+          ${feat.title}
+        </div>
+        <div class="news-featured-subtitle">${feat.subtitle ?? ''}</div>
+        <div class="news-featured-desc">${feat.description ?? ''}</div>
+        ${feat.ctaLabel ? `
+          <button class="news-featured-cta" style="
+            background:${feat.accentColor ?? 'var(--color-primary)'};
+            box-shadow:0 0 16px ${feat.accentColor ?? 'var(--color-primary)'}66;
+          " data-cta-action="${feat.ctaAction}" data-cta-target="${feat.ctaTarget}">
+            ${feat.ctaLabel}
+          </button>
+        ` : ''}
+      </div>
+    ` : '';
+
+    // News items
+    const newsItems = nd?.news ?? [];
+    const newsHTML = newsItems.map(item => `
+      <div class="news-item ${item.pinned ? 'news-pinned' : ''}">
+        <div class="news-item-meta">
+          <span class="news-category" style="color:${catColor(item.categoryColor)};border-color:${catColor(item.categoryColor)}44">
+            ${item.category}
+          </span>
+          <span class="news-date">${item.date}</span>
+          ${item.pinned ? '<span class="news-pin-icon">📌</span>' : ''}
+        </div>
+        <div class="news-headline">${item.headline}</div>
+        <div class="news-body">${item.body}</div>
+      </div>
+    `).join('');
+
+    // Patch notes
+    const patches = nd?.patchNotes ?? [];
+    const patchHTML = patches.length === 0 ? '' : `
+      <div class="news-section-label">// PATCH NOTES</div>
+      ${patches.map(p => `
+        <div class="news-patch-block">
+          <div class="news-patch-header">
+            <span class="news-patch-version">v${p.version}</span>
+            <span class="news-patch-label">${p.label}</span>
+            <span class="news-patch-date">${p.date}</span>
+          </div>
+          <ul class="news-patch-list">
+            ${p.notes.map(n => `<li>${n}</li>`).join('')}
+          </ul>
+        </div>
+      `).join('')}
+    `;
+
+    content.innerHTML = `
+      <div class="news-app">
+
+        <div class="news-masthead">
+          <div class="news-masthead-logo">
+            <div class="news-sphere">
+              <div class="news-sphere-core"></div>
+              <div class="news-sphere-ring"></div>
+            </div>
+            <div>
+              <div class="news-masthead-title">BOPWARE</div>
+              <div class="news-masthead-sub">DECK DISPATCH · v${this.appsData?.version ?? '0.0.1'}</div>
+            </div>
+          </div>
+          <div class="news-masthead-date">${new Date().toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }).toUpperCase()}</div>
+        </div>
+
+        <div class="news-scroll">
+          ${featHTML}
+          <div class="news-section-label">// LATEST TRANSMISSIONS</div>
+          ${newsHTML || '<div class="news-empty">NO TRANSMISSIONS ON FILE</div>'}
+          ${patchHTML}
+        </div>
+
+      </div>
+    `;
+
+    // Wire featured CTA button
+    content.querySelector('[data-cta-action]')?.addEventListener('click', e => {
+      const action = e.currentTarget.dataset.ctaAction;
+      const target = e.currentTarget.dataset.ctaTarget;
+      if (action === 'launch') {
+        const game = this.appsData?.games?.find(g => g.id === target);
+        if (game) {
+          window.WinMgr.close('news');
+          this.launchGame(game);
+        }
+      } else if (action === 'open') {
+        window.WinMgr.close('news');
+        this.openApp(target);
+      }
+      window.AudioMgr?.play('ui', 'confirm');
+    });
   }
 
   // ── MEDIA PLAYER ─────────────────────────────────────────────
@@ -592,12 +679,9 @@ class DeckUI {
   _openMediaPlayer() {
     const tracks = window.AudioMgr.getPlayerTracks();
 
-    const win = window.WinMgr.open({
-      id: 'bopmedia',
-      title: 'BOP MEDIA',
-      width: 320,
-      height: 480,
-      icon: '🎵',
+    window.WinMgr.open({
+      id: 'bopmedia', title: 'BOP MEDIA',
+      width: 320, height: 480, icon: '🎵',
     });
 
     const content = window.WinMgr.getWindowContent('bopmedia');
@@ -608,7 +692,11 @@ class DeckUI {
     let audio = null;
 
     const render = () => {
-      const track = tracks[currentTrack] ?? { title: 'No tracks loaded', artist: 'Drop files in assets/audio/music/player/', file: null };
+      const track = tracks[currentTrack] ?? {
+        title: 'No tracks loaded',
+        artist: 'Drop files in assets/audio/music/player/',
+        file: null,
+      };
 
       content.innerHTML = `
         <div class="media-player">
@@ -642,17 +730,14 @@ class DeckUI {
         </div>
       `;
 
-      // Wire buttons
       document.getElementById('media-play')?.addEventListener('click', () => {
         if (!track.file) return;
         if (!audio) audio = new Audio(track.file);
         if (isPlaying) {
-          audio.pause();
-          isPlaying = false;
+          audio.pause(); isPlaying = false;
           window.AudioMgr?.play('media', 'pause');
         } else {
-          audio.play().catch(() => {});
-          isPlaying = true;
+          audio.play().catch(() => {}); isPlaying = true;
           window.AudioMgr?.play('media', 'play');
         }
         render();
@@ -690,15 +775,12 @@ class DeckUI {
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
-  // ── TRANSMISSIONS APP ─────────────────────────────────────────
+  // ── TRANSMISSIONS ─────────────────────────────────────────────
 
   _openTransmissions() {
-    const win = window.WinMgr.open({
-      id: 'messages',
-      title: 'TRANSMISSIONS',
-      width: 400,
-      height: 460,
-      icon: '📡',
+    window.WinMgr.open({
+      id: 'messages', title: 'TRANSMISSIONS',
+      width: 400, height: 460, icon: '📡',
     });
 
     const content = window.WinMgr.getWindowContent('messages');
@@ -709,13 +791,9 @@ class DeckUI {
     content.innerHTML = `
       <div class="transmissions-app">
         <div style="
-          padding:8px 14px;
-          font-family:var(--font-mono);
-          font-size:9px;
-          color:var(--color-text-muted);
-          letter-spacing:0.15em;
-          border-bottom:1px solid var(--color-border);
-          background:var(--color-bg-panel);
+          padding:8px 14px;font-family:var(--font-mono);font-size:9px;
+          color:var(--color-text-muted);letter-spacing:0.15em;
+          border-bottom:1px solid var(--color-border);background:var(--color-bg-panel);
         ">
           DEEP SPACE RELAY · ${transmissions.length} MESSAGES · ${window.BopState.getUnreadCount()} UNREAD
         </div>
@@ -737,7 +815,6 @@ class DeckUI {
       </div>
     `;
 
-    // Open individual message
     content.querySelectorAll('[data-msg-id]').forEach(el => {
       el.addEventListener('click', () => {
         const id = el.dataset.msgId;
@@ -759,18 +836,13 @@ class DeckUI {
     modal.id = 'transmission-detail';
     modal.style.cssText = `
       position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:860;
-      display:flex;align-items:center;justify-content:center;
-      animation:fadeIn 0.2s ease;
+      display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;
     `;
 
     modal.innerHTML = `
       <div style="
-        background:var(--color-bg-panel);
-        border:1px solid var(--color-border);
-        border-radius:8px;
-        padding:24px;
-        max-width:420px;
-        width:90%;
+        background:var(--color-bg-panel);border:1px solid var(--color-border);
+        border-radius:8px;padding:24px;max-width:420px;width:90%;
         box-shadow:0 0 40px var(--color-glow);
       ">
         <div style="font-family:var(--font-mono);font-size:9px;color:var(--color-text-muted);letter-spacing:0.2em;margin-bottom:4px;">
@@ -784,40 +856,32 @@ class DeckUI {
         </div>
         <div style="
           font-family:var(--font-retro);font-size:18px;color:var(--color-text-dim);
-          line-height:1.6;margin-bottom:20px;
-          padding:12px;border:1px solid var(--color-border);border-radius:4px;
-          background:var(--color-bg);
-        ">
-          ${msg.body}
-        </div>
+          line-height:1.6;margin-bottom:20px;padding:12px;
+          border:1px solid var(--color-border);border-radius:4px;background:var(--color-bg);
+        ">${msg.body}</div>
         <button style="
           background:transparent;border:1px solid var(--color-border);
           color:var(--color-text-dim);font-family:var(--font-mono);
-          font-size:10px;padding:6px 16px;border-radius:4px;
-          cursor:pointer;letter-spacing:0.1em;float:right;
+          font-size:10px;padding:6px 16px;border-radius:4px;cursor:pointer;
+          letter-spacing:0.1em;float:right;
         " id="close-detail-btn">CLOSE TRANSMISSION</button>
       </div>
     `;
 
     document.body.appendChild(modal);
-    modal.addEventListener('click', e => {
-      if (e.target === modal) modal.remove();
-    });
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
     modal.querySelector('#close-detail-btn').addEventListener('click', () => {
       window.AudioMgr?.play('ui', 'back');
       modal.remove();
     });
   }
 
-  // ── SETTINGS APP ─────────────────────────────────────────────
+  // ── SETTINGS ─────────────────────────────────────────────────
 
   _openSettings() {
-    const win = window.WinMgr.open({
-      id: 'settings',
-      title: 'SYSTEM SETTINGS',
-      width: 400,
-      height: 520,
-      icon: '⚙️',
+    window.WinMgr.open({
+      id: 'settings', title: 'SYSTEM SETTINGS',
+      width: 400, height: 520, icon: '⚙️',
     });
 
     const content = window.WinMgr.getWindowContent('settings');
@@ -833,33 +897,22 @@ class DeckUI {
 
         <div class="settings-section">
           <div class="settings-section-title">DISPLAY</div>
-
           <div class="settings-row">
-            <div>
-              <div class="settings-label">SCANLINES</div>
-              <div class="settings-desc">CRT scanline overlay effect</div>
-            </div>
+            <div><div class="settings-label">SCANLINES</div><div class="settings-desc">CRT scanline overlay effect</div></div>
             <label class="toggle-switch">
               <input type="checkbox" id="setting-scanlines" ${settings.scanlines !== false ? 'checked' : ''}>
               <div class="toggle-track"></div>
             </label>
           </div>
-
           <div class="settings-row">
-            <div>
-              <div class="settings-label">GLOW EFFECT</div>
-              <div class="settings-desc">Phosphor glow on text and UI</div>
-            </div>
+            <div><div class="settings-label">GLOW EFFECT</div><div class="settings-desc">Phosphor glow on text and UI</div></div>
             <label class="toggle-switch">
               <input type="checkbox" id="setting-glow" ${settings.glowEffect !== false ? 'checked' : ''}>
               <div class="toggle-track"></div>
             </label>
           </div>
-
           <div class="settings-row">
-            <div>
-              <div class="settings-label">SHOW CLOCK</div>
-            </div>
+            <div><div class="settings-label">SHOW CLOCK</div></div>
             <label class="toggle-switch">
               <input type="checkbox" id="setting-clock" ${settings.showClock !== false ? 'checked' : ''}>
               <div class="toggle-track"></div>
@@ -881,21 +934,15 @@ class DeckUI {
 
         <div class="settings-section">
           <div class="settings-section-title">AUDIO</div>
-
           <div class="settings-row">
-            <div>
-              <div class="settings-label">AMBIENT MUSIC</div>
-            </div>
+            <div><div class="settings-label">AMBIENT MUSIC</div></div>
             <label class="toggle-switch">
               <input type="checkbox" id="setting-music" ${settings.ambientMusic !== false ? 'checked' : ''}>
               <div class="toggle-track"></div>
             </label>
           </div>
-
           <div class="settings-row">
-            <div>
-              <div class="settings-label">SOUND EFFECTS</div>
-            </div>
+            <div><div class="settings-label">SOUND EFFECTS</div></div>
             <label class="toggle-switch">
               <input type="checkbox" id="setting-sfx" ${settings.sfxEnabled !== false ? 'checked' : ''}>
               <div class="toggle-track"></div>
@@ -932,7 +979,6 @@ class DeckUI {
       </div>
     `;
 
-    // Wire settings toggles
     document.getElementById('setting-scanlines')?.addEventListener('change', e => {
       const on = e.target.checked;
       window.BopState.updateSetting('scanlines', on);
@@ -975,18 +1021,13 @@ class DeckUI {
   // ── GLOBAL EVENTS ─────────────────────────────────────────────
 
   _bindGlobalEvents() {
-    // Return to deck button
     document.getElementById('return-to-deck')?.addEventListener('click', () => {
       window.AudioMgr?.play('ui', 'back');
       window.WinMgr.handleEscapeKey();
     });
 
-    // Mobile orientation change
-    window.addEventListener('resize', () => {
-      // Re-render rows if needed
-    });
+    window.addEventListener('resize', () => {});
 
-    // Click SFX on all buttons
     document.addEventListener('click', e => {
       if (e.target.tagName === 'BUTTON' && !e.target.closest('.notestick')) {
         window.AudioMgr?.play('ui', 'click');

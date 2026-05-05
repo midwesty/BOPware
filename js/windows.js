@@ -1,6 +1,7 @@
 /**
  * BOPWARE DECK — Window Manager
  * Handles creation, dragging, resizing, fullscreen of app windows
+ * Minimized windows collapse to a tray bar above the taskbar
  */
 
 class WindowManager {
@@ -9,6 +10,61 @@ class WindowManager {
     this.zCounter = 200;
     this.activeWindowId = null;
     this.gameRunning = false;
+    this._trayEl = null;
+  }
+
+  // ── TRAY ──────────────────────────────────────────────────
+
+  _ensureTray() {
+    if (this._trayEl) return;
+    this._trayEl = document.getElementById('window-tray');
+    if (!this._trayEl) {
+      this._trayEl = document.createElement('div');
+      this._trayEl.id = 'window-tray';
+      document.body.appendChild(this._trayEl);
+    }
+  }
+
+  _updateTray() {
+    this._ensureTray();
+    const minimized = [...this.windows.values()].filter(w => w.minimized);
+
+    if (minimized.length === 0) {
+      this._trayEl.classList.remove('tray-visible');
+      this._trayEl.innerHTML = '';
+      return;
+    }
+
+    this._trayEl.classList.add('tray-visible');
+    this._trayEl.innerHTML = '';
+
+    minimized.forEach(win => {
+      const chip = document.createElement('div');
+      chip.className = 'tray-chip';
+      chip.title = `Click to restore ${win.title}`;
+
+      chip.innerHTML = `
+        <span class="tray-chip-icon">${win.icon ?? '▪'}</span>
+        <span class="tray-chip-title">${win.title}</span>
+        <button class="tray-chip-close" data-close-chip="${win.id}" title="Close ${win.title}">✕</button>
+      `;
+
+      // Restore on chip body click
+      chip.addEventListener('click', e => {
+        if (e.target.dataset.closeChip) return;
+        window.AudioMgr?.play('apps', 'app_open');
+        this.restore(win.id);
+      });
+
+      // Close directly from chip X
+      chip.querySelector('.tray-chip-close').addEventListener('click', e => {
+        e.stopPropagation();
+        window.AudioMgr?.play('apps', 'app_close');
+        this.close(win.id);
+      });
+
+      this._trayEl.appendChild(chip);
+    });
   }
 
   // ── CREATE WINDOW ──────────────────────────────────────────
@@ -27,10 +83,15 @@ class WindowManager {
       resizable = true,
     } = config;
 
-    // If already open, focus it
+    // If already open and minimized, restore it
     if (this.windows.has(id)) {
-      this.focus(id);
-      return this.windows.get(id);
+      const existing = this.windows.get(id);
+      if (existing.minimized) {
+        this.restore(id);
+      } else {
+        this.focus(id);
+      }
+      return existing;
     }
 
     const winEl = document.createElement('div');
@@ -39,7 +100,6 @@ class WindowManager {
     winEl.dataset.windowId = id;
     winEl.tabIndex = 0;
 
-    // Position — center if no x/y given
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const startX = x ?? Math.max(8, (vw - width) / 2 + Math.random() * 40 - 20);
@@ -64,13 +124,15 @@ class WindowManager {
         </div>
       </div>
       <div class="window-body">
-        ${src ? `<iframe src="${src}" frameborder="0" allow="autoplay" sandbox="allow-scripts allow-same-origin allow-forms allow-modals"></iframe>` : '<div class="window-content"></div>'}
+        ${src
+          ? `<iframe src="${src}" frameborder="0" allow="autoplay" sandbox="allow-scripts allow-same-origin allow-forms allow-modals"></iframe>`
+          : '<div class="window-content"></div>'
+        }
       </div>
     `;
 
     document.getElementById('windows-layer').appendChild(winEl);
 
-    // Wire controls
     winEl.querySelector('.win-btn.close').addEventListener('click', () => {
       window.AudioMgr?.play('apps', 'app_close');
       this.close(id);
@@ -85,14 +147,17 @@ class WindowManager {
       this.toggleFullscreen(id);
     });
 
-    // Focus on click
     winEl.addEventListener('mousedown', () => this.focus(id));
 
-    // Drag
     this._makeDraggable(winEl, winEl.querySelector('[data-drag-handle]'));
 
-    // Store
-    const winState = { id, el: winEl, minimized: false, fullscreen: false, isGame, src, title };
+    const winState = {
+      id, el: winEl,
+      minimized: false,
+      fullscreen: false,
+      isGame, src, title,
+      icon: icon || (isGame ? '🎮' : '▪'),
+    };
     this.windows.set(id, winState);
 
     this.focus(id);
@@ -114,18 +179,25 @@ class WindowManager {
     const win = this.windows.get(id);
     if (!win) return;
 
-    win.el.style.animation = 'fadeOut 0.15s ease forwards';
-    win.el.addEventListener('animationend', () => win.el.remove(), { once: true });
+    if (win.minimized) {
+      win.el.remove();
+    } else {
+      win.el.style.animation = 'fadeOut 0.15s ease forwards';
+      win.el.addEventListener('animationend', () => win.el.remove(), { once: true });
+    }
 
     this.windows.delete(id);
 
-    // Check if any games still running
-    const anyGame = [...this.windows.values()].some(w => w.isGame);
-    if (!anyGame) {
+    if (this.activeWindowId === id) this.activeWindowId = null;
+
+    const anyVisibleGame = [...this.windows.values()].some(w => w.isGame && !w.minimized);
+    if (!anyVisibleGame) {
       this.gameRunning = false;
       this._hideReturnButton();
       document.getElementById('taskbar')?.classList.remove('hidden');
     }
+
+    this._updateTray();
   }
 
   closeAll() {
@@ -136,17 +208,59 @@ class WindowManager {
 
   minimize(id) {
     const win = this.windows.get(id);
-    if (!win) return;
-    win.el.style.display = 'none';
-    win.minimized = true;
+    if (!win || win.minimized) return;
+
+    win.el.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+    win.el.style.opacity = '0';
+    win.el.style.transform = 'scale(0.95) translateY(4px)';
+
+    setTimeout(() => {
+      win.el.style.display = 'none';
+      win.el.style.opacity = '';
+      win.el.style.transform = '';
+      win.el.style.transition = '';
+      win.minimized = true;
+      this._updateTray();
+
+      // Reveal taskbar/hide return if no visible games remain
+      const anyVisibleGame = [...this.windows.values()].some(w => w.isGame && !w.minimized);
+      if (!anyVisibleGame) {
+        this._hideReturnButton();
+        document.getElementById('taskbar')?.classList.remove('hidden');
+      }
+    }, 150);
   }
 
   restore(id) {
     const win = this.windows.get(id);
     if (!win) return;
+
     win.el.style.display = '';
+    win.el.style.opacity = '0';
+    win.el.style.transform = 'scale(0.97) translateY(4px)';
+    win.el.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        win.el.style.opacity = '1';
+        win.el.style.transform = 'scale(1) translateY(0)';
+        setTimeout(() => {
+          win.el.style.opacity = '';
+          win.el.style.transform = '';
+          win.el.style.transition = '';
+        }, 150);
+      });
+    });
+
     win.minimized = false;
     this.focus(id);
+    this._updateTray();
+
+    if (win.isGame) {
+      this.gameRunning = true;
+      this._showReturnButton();
+      document.getElementById('taskbar')?.classList.add('hidden');
+    }
   }
 
   // ── FULLSCREEN ────────────────────────────────────────────
@@ -202,7 +316,6 @@ class WindowManager {
       e.preventDefault();
     });
 
-    // Touch support
     handle.addEventListener('touchstart', e => {
       if (e.target.closest('.window-controls')) return;
       isDragging = true;
@@ -215,19 +328,15 @@ class WindowManager {
 
     document.addEventListener('mousemove', e => {
       if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      winEl.style.left = `${Math.max(0, origX + dx)}px`;
-      winEl.style.top = `${Math.max(30, origY + dy)}px`;
+      winEl.style.left = `${Math.max(0, origX + (e.clientX - startX))}px`;
+      winEl.style.top = `${Math.max(30, origY + (e.clientY - startY))}px`;
     });
 
     document.addEventListener('touchmove', e => {
       if (!isDragging) return;
       const t = e.touches[0];
-      const dx = t.clientX - startX;
-      const dy = t.clientY - startY;
-      winEl.style.left = `${Math.max(0, origX + dx)}px`;
-      winEl.style.top = `${Math.max(30, origY + dy)}px`;
+      winEl.style.left = `${Math.max(0, origX + (t.clientX - startX))}px`;
+      winEl.style.top = `${Math.max(30, origY + (t.clientY - startY))}px`;
     }, { passive: true });
 
     const stopDrag = () => {
@@ -242,28 +351,23 @@ class WindowManager {
   // ── RETURN TO DECK BUTTON ─────────────────────────────────
 
   _showReturnButton() {
-    const btn = document.getElementById('return-to-deck');
-    if (btn) btn.classList.add('visible');
+    document.getElementById('return-to-deck')?.classList.add('visible');
   }
 
   _hideReturnButton() {
-    const btn = document.getElementById('return-to-deck');
-    if (btn) btn.classList.remove('visible');
+    document.getElementById('return-to-deck')?.classList.remove('visible');
   }
 
-  // ── ESCAPE KEY / TILDE ────────────────────────────────────
+  // ── ESCAPE / TILDE ────────────────────────────────────────
 
   handleEscapeKey() {
-    if (this.activeWindowId && this.windows.has(this.activeWindowId)) {
-      const win = this.windows.get(this.activeWindowId);
-      if (win.isGame) {
-        // Exit fullscreen first if fullscreen
-        if (win.fullscreen) {
-          this.toggleFullscreen(this.activeWindowId);
-        } else {
-          this.close(this.activeWindowId);
-        }
-      }
+    if (!this.activeWindowId || !this.windows.has(this.activeWindowId)) return;
+    const win = this.windows.get(this.activeWindowId);
+    if (!win.isGame) return;
+    if (win.fullscreen) {
+      this.toggleFullscreen(this.activeWindowId);
+    } else {
+      this.close(this.activeWindowId);
     }
   }
 
