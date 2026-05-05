@@ -21,28 +21,28 @@
     "artist": "M. Clay Space",
     "genre": "Star Strum",
     "duration": "1:05",
-    "file": "assets/audio/jukebox/Hard Up and Stoned (in space).wav"
+    "file": "spaced/assets/audio/jukebox/Hard Up and Stoned (in space).wav"
    },
    {
     "title": "The Fuckin' Slug ",
     "artist": "The Slugs",
     "genre": "Braincore",
     "duration": "2:23",
-    "file": "assets/audio/jukebox/The Fuckin' Slug.mp3"
+    "file": "spaced/assets/audio/jukebox/The Fuckin' Slug.mp3"
    },
    {
     "title": "Shower Song",
     "artist": "M. Clay Space (feat. Lil Uranus)",
     "genre": "Asteroid Folk",
     "duration": "0:53",
-    "file": "assets/audio/jukebox/Shower Song.mp3"
+    "file": "spaced/assets/audio/jukebox/Shower Song.mp3"
    },
    {
     "title": "Fuel & Static",
     "artist": "DJ Kael",
     "genre": "Electronic",
     "duration": "3:12",
-    "file": "assets/audio/jukebox/fuel_and_static.mp3"
+    "file": "spaced/assets/audio/jukebox/fuel_and_static.mp3"
    },
    {
     "title": "Into the Dark Sector",
